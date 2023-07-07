@@ -3,7 +3,7 @@
 ******* 
 ### 0. Lockboxes
 
-`
+
 * Prototype: `def canUnlockAll(boxes)`
 * `boxes` is a list of lists
 * A key with the same number as a box opens that box
@@ -11,9 +11,9 @@
 * There can be keys that do not have boxes
 * The first box `boxes[0]` is unlocked
 * Return `True` if all boxes can be opened, else return `False`
-`
 
-`
+
+
 carrie@ubuntu:~/0x01-lockboxes$ cat main_0.py
 #!/usr/bin/python3
 
@@ -34,11 +34,9 @@ True
 True
 False
 carrie@ubuntu:~/0x01-lockboxes$
-`
 
-`
+
 * Repo:
 * GitHub repository: `alx-interview`
 * Directory: `0x01-lockboxes`
 * File: `0-lockboxes.py`
-`
