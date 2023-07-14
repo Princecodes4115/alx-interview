@@ -25,3 +25,4 @@ def minOperations(n):
                 n /= i
                 factor_list.append(i)
     return sum(factor_list)
+    
