@@ -1,44 +1,35 @@
 #!/usr/bin/python3
-
-""" script that reads stdin line by line and computes metrics """
-
 import sys
+import signal
 
-def printsts(dic, size):
-    """ WWPrints information """
-    print("File size: {:d}".format(size))
-    for i in sorted(dic.keys()):
-        if dic[i] != 0:
-            print("{}: {:d}".format(i, dic[i]))
+status_codes = {200, 301, 400, 401, 403, 404, 405, 500}
+total_size = 0
+status_counts = {code: 0 for code in status_codes}
 
+def print_statistics():
+    print("File size: {}".format(total_size))
+    for code in sorted(status_codes):
+        if status_counts[code] > 0:
+            print("{}: {}".format(code, status_counts[code]))
 
-sts = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0,
-       "404": 0, "405": 0, "500": 0}
+def signal_handler(signal, frame):
+    print_statistics()
+    sys.exit(0)
 
-count = 0
-size = 0
+signal.signal(signal.SIGINT, signal_handler)
 
-try:
-    for line in sys.stdin:
-        if count != 0 and count % 10 == 0:
-            printsts(sts, size)
+line_count = 0
+for line in sys.stdin:
+    try:
+        parts = line.split()
+        ip_address, _, _, status_code, file_size = parts[0], parts[5], parts[8], int(parts[-2]), int(parts[-1])
+        if status_code in status_codes:
+            total_size += file_size
+            status_counts[status_code] += 1
+            line_count += 1
+            if line_count % 10 == 0:
+                print_statistics()
+    except (ValueError, IndexError):
+        continue
 
-        stlist = line.split()
-        count += 1
-
-        try:
-            size += int(stlist[-1])
-        except:
-            pass
-
-        try:
-            if stlist[-2] in sts:
-                sts[stlist[-2]] += 1
-        except:
-            pass
-    printsts(sts, size)
-
-
-except KeyboardInterrupt:
-    printsts(sts, size)
-    raise
+print_statistics()
