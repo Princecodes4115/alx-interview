@@ -33,3 +33,4 @@ for line in sys.stdin:
         continue
 
 print_statistics()
+
